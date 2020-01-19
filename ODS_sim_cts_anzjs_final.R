@@ -92,10 +92,10 @@ for(k in c(1:nrow(scenarios))){
     if(design %in% paste0("ushaped",c("0.10","0.25","0.30","0.50","0.60","0.75","1.00"))){
       integrand <- function(z,tuner) dnorm(z)*sqrt(tuner+(1-tuner)*z^2)
       A <- integrate(integrand,-Inf,Inf,tuner=u.tuner)$value
-      popn$pi <- sqrt(u.tuner+(1-u.tuner)*popn$y^2)/A*n
+      popn$pi <- sqrt(u.tuner+(1-u.tuner)*popn$y^2)/A*n/N
       meta.pi.fn <- function(A,n,tuner){
         pi.fn <- function(y){
-          sqrt(tuner+(1-tuner)*y^2)/A*n
+          sqrt(tuner+(1-tuner)*y^2)/A*n/N
         }
         return(pi.fn)
       }
