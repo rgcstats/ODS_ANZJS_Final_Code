@@ -1,6 +1,9 @@
 ##################################################
 # ODS Simulation Study Continuous Response
 # Final version for ANZJS Paper
+# Note: This code does not make use of parallelisation,
+#       as this would be more complex and not work on all operating systems.
+#       As a result, it takes several days to run. 
 ##################################################
 
 #################################
@@ -90,16 +93,8 @@ for(k in c(1:nrow(scenarios))){
     if(design=="ushaped0.30") u.tuner <- 0.3
     if(design=="ushaped0.60") u.tuner <- 0.6
     if(design %in% paste0("ushaped",c("0.10","0.25","0.30","0.50","0.60","0.75","1.00"))){
-      integrand <- function(z,tuner) dnorm(z)*sqrt(tuner+(1-tuner)*z^2)
-      A <- integrate(integrand,-Inf,Inf,tuner=u.tuner)$value
-      popn$pi <- sqrt(u.tuner+(1-u.tuner)*popn$y^2)/A*n/N
-      meta.pi.fn <- function(A,n,tuner){
-        pi.fn <- function(y){
-          sqrt(tuner+(1-tuner)*y^2)/A*n/N
-        }
-        return(pi.fn)
-      }
-      pi.fn <- meta.pi.fn(A=A,n=n,tuner=u.tuner)
+      popn$pi <- p.s.ushaped(ys=NULL,yr=popn$y,log=FALSE,specs=c(n0=n,tuner=u.tuner,return.what=2))
+      pi.fn <- p.s.ushaped(ys=NULL,yr=popn$y,log=FALSE,specs=c(n0=n,tuner=u.tuner,return.what=3))
     }
     s <- c(1:N)[runif(N)<=popn$pi]
     samp <- popn[s,]
